@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,8 +14,8 @@
 </head>
 <body>
 <div id="msg">
-  <p id="text"></p>
-  <a id="manual" class="btn" href="#" style="display:none">باز کردن ویدیو</a>
+  <p>If the video didn't open, tap the button below.</p>
+  <a id="manual" class="btn" href="#">Open video</a>
 </div>
 
 <script>
@@ -31,29 +31,20 @@
   var id = videos[Math.floor(Math.random() * videos.length)];
   var webUrl = "https://www.youtube.com/watch?v=" + id;
 
-  // فقط اندروید
-  var isAndroid = /Android/i.test(navigator.userAgent);
-  if (!isAndroid) {
-    document.getElementById("msg").style.display = "block";
-    document.getElementById("text").textContent = "این صفحه فقط روی گوشی اندروید کار می‌کند.";
-    return;
-  }
-
-  // روش ۱: باز شدن مستقیم در اپ یوتیوب (با fallback به مرورگر)
+  // Method 1: open directly in the YouTube app (falls back to browser)
   var appUrl = "intent://www.youtube.com/watch?v=" + id +
     "#Intent;scheme=https;package=com.google.android.youtube;" +
     "S.browser_fallback_url=" + encodeURIComponent(webUrl) + ";end";
 
-  // روش ۲: لینک معمولی (روش پیش‌فرض گوشی)
-  var target = (Math.random() < 0.5) ? appUrl : webUrl;
+  // Method 2: normal link (phone's default handler)
+  var isAndroid = /Android/i.test(navigator.userAgent);
+  var target = (isAndroid && Math.random() < 0.5) ? appUrl : webUrl;
 
-  // دکمه دستی در صورتی که ریدایرکت خودکار بلاک شد
+  // Manual button in case the automatic redirect is blocked
   var btn = document.getElementById("manual");
   btn.href = target;
   setTimeout(function () {
     document.getElementById("msg").style.display = "block";
-    btn.style.display = "inline-block";
-    document.getElementById("text").textContent = "اگر ویدیو باز نشد روی دکمه بزنید";
   }, 2500);
 
   window.location.replace(target);
