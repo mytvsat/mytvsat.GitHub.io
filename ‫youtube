@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redirecting...</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+       background:#111;color:#fff;font-family:sans-serif;text-align:center;padding:20px}
+  a.btn{display:inline-block;margin-top:16px;padding:12px 24px;background:#f00;color:#fff;
+        border-radius:8px;text-decoration:none}
+  #msg{display:none}
+</style>
+</head>
+<body>
+<div id="msg">
+  <p id="text"></p>
+  <a id="manual" class="btn" href="#" style="display:none">باز کردن ویدیو</a>
+</div>
+
+<script>
+(function () {
+  var videos = [
+    "EtHzp_zOCNk",
+    "VuHDq33lKOY",
+    "5OJi1UPLgPc",
+    "DY6HalZns0k",
+    "JUGxJFIyZQs"
+  ];
+
+  var id = videos[Math.floor(Math.random() * videos.length)];
+  var webUrl = "https://www.youtube.com/watch?v=" + id;
+
+  // فقط اندروید
+  var isAndroid = /Android/i.test(navigator.userAgent);
+  if (!isAndroid) {
+    document.getElementById("msg").style.display = "block";
+    document.getElementById("text").textContent = "این صفحه فقط روی گوشی اندروید کار می‌کند.";
+    return;
+  }
+
+  // روش ۱: باز شدن مستقیم در اپ یوتیوب (با fallback به مرورگر)
+  var appUrl = "intent://www.youtube.com/watch?v=" + id +
+    "#Intent;scheme=https;package=com.google.android.youtube;" +
+    "S.browser_fallback_url=" + encodeURIComponent(webUrl) + ";end";
+
+  // روش ۲: لینک معمولی (روش پیش‌فرض گوشی)
+  var target = (Math.random() < 0.5) ? appUrl : webUrl;
+
+  // دکمه دستی در صورتی که ریدایرکت خودکار بلاک شد
+  var btn = document.getElementById("manual");
+  btn.href = target;
+  setTimeout(function () {
+    document.getElementById("msg").style.display = "block";
+    btn.style.display = "inline-block";
+    document.getElementById("text").textContent = "اگر ویدیو باز نشد روی دکمه بزنید";
+  }, 2500);
+
+  window.location.replace(target);
+})();
+</script>
+</body>
+</html>
